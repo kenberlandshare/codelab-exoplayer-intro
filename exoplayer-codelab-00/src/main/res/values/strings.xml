@@ -14,7 +14,11 @@ limitations under the License. -->
 <resources>
   <string name="app_name">ExoPlayer code lab</string>
   <string name="player_activity_name">Media player</string>
+  <string name="media_url_mp3_2">https://kenpublic.s3.amazonaws.com/2023-08-24/BRwkjy6gb8pNFzNG/sgtpepper-gapless.mp3</string>
   <string name="media_url_mp3">https://storage.googleapis.com/exoplayer-test-media-0/Jazz_In_Paris.mp3</string>
+  <string name="media_url_atmos">https://kenpublic.s3.amazonaws.com/2023-08-24/NjFMRg0cHaDPqEOr/05_TheGreatGigInTheSky_ADMBWF_v3_ec3.mp4</string>
+  <string name="media_url_atmos2">https://kenpublic.s3.amazonaws.com/2023-08-24/jy-5Ky67voVV2aPl/Track3Representation10_EC3.mp4</string>
+  <string name="media_url_atmos3">https://kenpublic.s3.amazonaws.com/2023-08-24/NvUr5jzZHb8Y9seI/Track3Representation11_AC4.mp4</string>
   <!-- Big Buck Bunny video provided by the Blender Foundation.
   (c) copyright 2008, Blender Foundation / www.bigbuckbunny.org -->
   <string name="media_url_mp4">https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4</string>

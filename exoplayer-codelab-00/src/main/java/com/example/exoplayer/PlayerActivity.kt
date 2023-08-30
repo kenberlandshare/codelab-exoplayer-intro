@@ -15,8 +15,15 @@
  */
 package com.example.exoplayer
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.Util
+import androidx.media3.exoplayer.ExoPlayer
 import com.example.exoplayer.databinding.ActivityPlayerBinding
 
 /**
@@ -32,4 +39,75 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
     }
+
+    private var player: ExoPlayer? = null
+
+    private fun initializePlayer() {
+        player = ExoPlayer.Builder(this)
+                .build()
+                .also { exoPlayer ->
+                    viewBinding.videoView.player = exoPlayer
+                    val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp3))
+                    exoPlayer.setMediaItems(listOf(mediaItem), mediaItemIndex, playbackPosition)
+                    exoPlayer.playWhenReady = playWhenReady
+                    exoPlayer.prepare()
+                }
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    public override fun onStart() {
+        super.onStart()
+        if (Util.SDK_INT > 23) {
+            initializePlayer()
+        }
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    public override fun onResume() {
+        super.onResume()
+        hideSystemUi()
+        if ((Util.SDK_INT <= 23 || player == null)) {
+            initializePlayer()
+        }
+    }
+
+    @SuppressLint("InlinedApi")
+    private fun hideSystemUi() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, viewBinding.videoView).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    public override fun onPause() {
+        super.onPause()
+        if (Util.SDK_INT <= 23) {
+            releasePlayer()
+        }
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    public override fun onStop() {
+        super.onStop()
+        if (Util.SDK_INT > 23) {
+            releasePlayer()
+        }
+    }
+
+    private var playWhenReady = true
+    private var mediaItemIndex = 0
+    private var playbackPosition = 0L
+
+    private fun releasePlayer() {
+        player?.let { exoPlayer ->
+            playbackPosition = exoPlayer.currentPosition
+            mediaItemIndex = exoPlayer.currentMediaItemIndex
+            playWhenReady = exoPlayer.playWhenReady
+            exoPlayer.release()
+        }
+        player = null
+    }
+
 }
